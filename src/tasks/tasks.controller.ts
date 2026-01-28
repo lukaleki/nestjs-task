@@ -45,7 +45,7 @@ export class TasksController {
     return this.tasksService.updateStatusById(id, status);
   }
 
-  // user can add properties we dont support(not big but problem)
+  // user can add properties we don't support(not big but problem)
   // @Post()
   // createTask(@Body() body) {
   //   console.log('body', body);
