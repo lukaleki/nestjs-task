@@ -23,13 +23,9 @@ export class TasksService {
 
     if (search) {
       tasks = tasks.filter((task) => {
-        if (
-          task.title.toLowerCase().includes(search) ||
+        return task.title.toLowerCase().includes(search) ||
           task.description.toLowerCase().includes(search)
-        ) {
-          return true;
-        }
-        return false;
+
       });
     }
 
