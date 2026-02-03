@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import { CreateTaskDTO } from './DTO/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDTO } from './DTO/get-tasks-filter.dto';
-import { TasksRepositoryAbstract } from './tasks.repository.interface';
+import { TasksRepositoryAbstract } from './tasks.repository.abstract';
 
 @Injectable()
 export class TasksRepositorySql
