@@ -6,9 +6,10 @@ import { TasksRepositorySql } from './tasks.repositorysql';
 import { Task } from './task.entity';
 import { TasksRepositoryAbstract } from './tasks.repository.abstract';
 import { AuthModule } from '../auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task]), AuthModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Task]), AuthModule],
   controllers: [TasksController],
   providers: [
     TasksService,
