@@ -28,7 +28,7 @@ export class TasksRepositorySql
 
     if (search) {
       query.andWhere(
-        'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
+        '(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
     }
@@ -36,8 +36,8 @@ export class TasksRepositorySql
     return await query.getMany();
   }
 
-  async getTaskById(id: string): Promise<Task> {
-    const found = await this.findOneBy({ id });
+  async getTaskById(id: string, user: User): Promise<Task> {
+    const found = await this.findOne({ where: { id, user } });
 
     if (!found) {
       throw new NotFoundException(`Task with id ${id} not found`);
@@ -58,13 +58,26 @@ export class TasksRepositorySql
     return task;
   }
 
-  async deleteTask(id: string) {
-    const found = await this.getTaskById(id);
-    await this.remove(found);
+  // using remove(slightly not efficient)
+  // async deleteTask(id: string, user: User): Promise<void> {
+  //   const found = await this.getTaskById(id, user);
+  //   await this.remove(found);
+  // }
+
+  async deleteTask(id: string, user: User): Promise<void> {
+    const result = await this.delete({ id, user });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
   }
 
-  async updateStatusById(id: string, status: TaskStatus): Promise<Task> {
-    const task = await this.getTaskById(id);
+  async updateStatusById(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
     task.status = status;
     await this.save(task);
 

@@ -7,7 +7,11 @@ import { User } from '../auth/user.entity';
 export abstract class TasksRepositoryAbstract {
   abstract getTasks(filterDto: GetTasksFilterDTO, user: User): Promise<Task[]>;
   abstract createTask(createTaskDto: CreateTaskDTO, user: User): Promise<Task>;
-  abstract getTaskById(id: string): Promise<Task>;
-  abstract deleteTask(id: string): Promise<void>;
-  abstract updateStatusById(id: string, status: TaskStatus): Promise<Task>;
+  abstract getTaskById(id: string, user: User): Promise<Task>;
+  abstract deleteTask(id: string, user: User): Promise<void>;
+  abstract updateStatusById(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task>;
 }

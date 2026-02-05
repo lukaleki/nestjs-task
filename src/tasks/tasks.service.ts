@@ -14,16 +14,16 @@ export class TasksService {
     return this.tasksRepository.getTasks(filterDto, user);
   }
 
-  getTaskById(id: string): Promise<Task> {
-    return this.tasksRepository.getTaskById(id);
+  getTaskById(id: string, user: User): Promise<Task> {
+    return this.tasksRepository.getTaskById(id, user);
   }
 
-  deleteTask(id: string): Promise<void> {
-    return this.tasksRepository.deleteTask(id);
+  deleteTask(id: string, user: User): Promise<void> {
+    return this.tasksRepository.deleteTask(id, user);
   }
 
-  updateStatusById(id: string, status: TaskStatus): Promise<Task> {
-    return this.tasksRepository.updateStatusById(id, status);
+  updateStatusById(id: string, status: TaskStatus, user: User): Promise<Task> {
+    return this.tasksRepository.updateStatusById(id, status, user);
   }
 
   createTask(createTaskDto: CreateTaskDTO, user: User): Promise<Task> {
