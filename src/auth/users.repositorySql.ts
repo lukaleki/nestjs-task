@@ -2,25 +2,19 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './auth-dto/auth-credentials.dto';
 import { UsersRepositoryAbstract } from './users.repository.abstract';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './jwt-payload.inteface';
 
 @Injectable()
 export class UsersRepositorySql
   extends Repository<User>
   implements UsersRepositoryAbstract
 {
-  constructor(
-    datasource: DataSource,
-    private jwtService: JwtService,
-  ) {
+  constructor(datasource: DataSource) {
     super(User, datasource.createEntityManager());
   }
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
@@ -37,27 +31,10 @@ export class UsersRepositorySql
     } catch (error) {
       if ((error as { code: string }).code === '23505') // duplicate username
       {
-        throw new ConflictException('User already exists');
+        throw new ConflictException(error);
       } else {
         throw new InternalServerErrorException();
       }
-    }
-  }
-
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
-    const { username, password } = authCredentialsDto;
-    const user = await this.findOne({
-      where: { username },
-    });
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { username };
-      const accessToken: string = this.jwtService.sign(payload);
-      return { accessToken };
-    } else {
-      throw new UnauthorizedException('Please check your login credentials');
     }
   }
 
