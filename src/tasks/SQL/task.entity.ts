@@ -1,10 +1,11 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { TaskStatus } from './task-status.enum';
-import { User } from '../auth/user.entity';
+import { TaskStatus } from '../task-status.enum';
+import { User } from '../../auth/SQL/user.entity';
 import { Exclude } from 'class-transformer';
+import { TaskInterface } from '../task.interface';
 
 @Entity()
-export class Task {
+export class Task implements TaskInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

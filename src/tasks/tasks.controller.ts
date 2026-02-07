@@ -13,10 +13,11 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDTO } from './DTO/create-task.dto';
 import { GetTasksFilterDTO } from './DTO/get-tasks-filter.dto';
 import { UpdateTaskStatusDTO } from './DTO/update-task-status.dto';
-import { Task } from './task.entity';
+
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
-import { User } from '../auth/user.entity';
+import type { UserInterface } from '../auth/user.interface';
+import { TaskInterface } from './task.interface';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -26,18 +27,24 @@ export class TasksController {
   @Get()
   getTasks(
     @Query() filterDto: GetTasksFilterDTO,
-    @GetUser() user: User,
-  ): Promise<Task[]> {
+    @GetUser() user: UserInterface,
+  ): Promise<TaskInterface[]> {
     return this.tasksService.getTasks(filterDto, user);
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
+  getTaskById(
+    @Param('id') id: string,
+    @GetUser() user: UserInterface,
+  ): Promise<TaskInterface> {
     return this.tasksService.getTaskById(id, user);
   }
 
   @Delete(':id')
-  deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+  deleteTask(
+    @Param('id') id: string,
+    @GetUser() user: UserInterface,
+  ): Promise<void> {
     return this.tasksService.deleteTask(id, user);
   }
 
@@ -45,8 +52,8 @@ export class TasksController {
   updateStatus(
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDTO,
-    @GetUser() user: User,
-  ): Promise<Task> {
+    @GetUser() user: UserInterface,
+  ): Promise<TaskInterface> {
     const { status } = updateTaskStatusDto;
     return this.tasksService.updateStatusById(id, status, user);
   }
@@ -54,8 +61,8 @@ export class TasksController {
   @Post()
   createTask(
     @Body() createTaskDTO: CreateTaskDTO,
-    @GetUser() user: User,
-  ): Promise<Task> {
+    @GetUser() user: UserInterface,
+  ): Promise<TaskInterface> {
     return this.tasksService.createTask(createTaskDTO, user);
   }
 }

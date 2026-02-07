@@ -2,11 +2,11 @@ import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { CreateTaskDTO } from './DTO/create-task.dto';
-import { TaskStatus } from './task-status.enum';
-import { GetTasksFilterDTO } from './DTO/get-tasks-filter.dto';
-import { TasksRepositoryAbstract } from './tasks.repository.abstract';
-import { User } from '../auth/user.entity';
+import { CreateTaskDTO } from '../DTO/create-task.dto';
+import { TaskStatus } from '../task-status.enum';
+import { GetTasksFilterDTO } from '../DTO/get-tasks-filter.dto';
+import { TasksRepositoryAbstract } from '../tasks.repository.abstract';
+import { User } from '../../auth/SQL/user.entity';
 
 @Injectable()
 export class TasksRepositorySql

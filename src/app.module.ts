@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -13,24 +14,32 @@ import { configValidationSchema } from './config.schema';
       validationSchema: configValidationSchema,
     }),
     TasksModule,
-    // async using env vars
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          type: 'postgres',
-          autoLoadEntities: true,
-          synchronize: true,
-          host: configService.get<string>('DB_HOST'),
-          port: configService.get<number>('DB_PORT'),
-          username: configService.get<string>('DB_USERNAME'),
-          password: configService.get<string>('DB_PASSWORD'),
-          database: configService.get<string>('DB_DATABASE'),
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+      }),
     }),
-    // sync
+    //
+    // async using env vars
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => {
+    //     return {
+    //       type: 'postgres',
+    //       autoLoadEntities: true,
+    //       synchronize: true,
+    //       host: configService.get<string>('DB_HOST'),
+    //       port: configService.get<number>('DB_PORT'),
+    //       username: configService.get<string>('DB_USERNAME'),
+    //       password: configService.get<string>('DB_PASSWORD'),
+    //       database: configService.get<string>('DB_DATABASE'),
+    //     };
+    //   },
+    // }),
+    // sync way
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
     //   autoLoadEntities: true,
